@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta content="width=device-width,initial-scale=1.0" name="viewport">
+
+        <link rel="stylesheet" href="./style.css">
+        <link rel="stylesheet" href="https://www.3dverse.com/sdk/dist/SDK3DVerse_VirtualJoystick_Ext.css">
+        <script src="https://3dverse.com/sdk/dist/SDK3DVerse.js"></script>
+        <script src="https://3dverse.com/sdk/dist/SDK3DVerse_ThreeJS_Ext.js"></script>
+        <script src="https://3dverse.com/sdk/dist/SDK3DVerse_VirtualJoystick_Ext.js"></script>
+        <script src="./AppConfig.js"></script>
+        <script src="./VideoPlayer.js"></script>
+        <script src="./app.js"></script>
+    </head>
+
+    <body>
+        <div id="container">
+            <!--
+                <div class="lds-ripple"><div></div><div></div></div>
+            -->
+            <div id="info">
+                <span id="info_span">Loading...</span>
+            </div>
+            <div id="fade"></div>
+            <canvas tabindex="1" id="display_canvas"></canvas>
+        </div>
+        <div id="joysticks">
+        </div>
+    </body>
+</html>
