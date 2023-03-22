@@ -221,31 +221,50 @@ function attachScripts(cameraEntity, characterController)
 //--------------------------------------------------------------------------------------------------
 async function initViewport(cameraEntity)
 {
-    console.debug('++++++++++++++++++ INIIIIIIIIIIIIIIIIIT')
-    const viewports = [
-        {
-            id: 0,
-            left: 0, top: 0, width: 1, height: 1,
-            camera: cameraEntity
-        }
-    ];
-    SDK3DVerse.setViewports(viewports);
+    const viewport = {
+        id: 0,
+        left: 0, top: 0, width: 1, height: 1,
+        camera: cameraEntity
+    };
+
+    await setDefaultCameraSettings(cameraEntity, viewport);
+
+    await SDK3DVerse.setViewports([viewport]);
     SetInformation("");
     FadeOut();
 
+    console.debug('initViewport done for camera:', cameraEntity);
+}
+
+//----------------------------------------------------------------------------------------------
+async function setDefaultCameraSettings(camera, viewport)
+{
+    await SDK3DVerse.engineAPI.overrideComponent([camera], 'camera');
+    let cameraComponent = camera.getComponent("camera");
+    const defaultCameraComponent = SDK3DVerse.engineAPI.cameraAPI.getDefaultCameraValues();
+
+    cameraComponent = {
+        ...cameraComponent,
+        ...defaultCameraComponent
+    };
+    cameraComponent.dataJSON = {
+        ...cameraComponent.dataJSON,
+        ...defaultCameraComponent.dataJSON
+    };
+
     if(AppConfig.cameraComponentDataJSON)
     {
-        await SDK3DVerse.engineAPI.overrideComponent([cameraEntity], 'camera');
-
-        const cameraComponent = cameraEntity.getComponent("camera");
-        cameraEntity.setComponent("camera", {
-            ...cameraComponent,
-            dataJSON: {
-                ...cameraComponent.dataJSON,
-                ...AppConfig.cameraComponentDataJSON
-            }
-        });
-
-        SDK3DVerse.engineAPI.propagateChanges();
+        cameraComponent.dataJSON = {
+            ...cameraComponent.dataJSON,
+            ...AppConfig.cameraComponentDataJSON
+        };
     }
+
+    camera.setComponent('camera', cameraComponent);
+    SDK3DVerse.engineAPI.propagateChanges();
+
+    viewport.defaultCameraValues = cameraComponent;
+
+    console.debug('defaultCameraComponent', cameraComponent);
 }
+
