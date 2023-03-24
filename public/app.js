@@ -56,6 +56,11 @@ async function InitApp()
         window.sampleApp = { videoPlayer };
         await videoPlayer.initialize();
     }
+    if(AppConfig.enableTeleporters)
+    {
+        const teleportController = new TeleportController(characterController);
+        await teleportController.initialize();
+    }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -144,6 +149,10 @@ async function Connect()
     SetInformation("Connecting to 3dverse...");
 
     const connectionInfo = await SDK3DVerse.webAPI.createOrJoinSession(AppConfig.sceneUUID);
+
+    // TODO: Need to force SSL when using microverse app "Open Dev Tool": figure out a better way to force tha tin this specific case.
+    connectionInfo.useSSL = true;
+
     SDK3DVerse.setupDisplay(document.getElementById('display_canvas'));
     SDK3DVerse.startStreamer(connectionInfo);
     await SDK3DVerse.connectToEditor();
