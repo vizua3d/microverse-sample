@@ -224,10 +224,10 @@ async function initViewport(cameraEntity)
     const viewport = {
         id: 0,
         left: 0, top: 0, width: 1, height: 1,
-        camera: cameraEntity
+        camera: cameraEntity,
+        defaultCameraValues: SDK3DVerse.engineAPI.cameraAPI.getDefaultCameraValues(),
+        //defaultPerspectiveLensValues: { fovy: 120 }
     };
-
-    await setDefaultCameraSettings(cameraEntity, viewport);
 
     await SDK3DVerse.setViewports([viewport]);
     SetInformation("");
@@ -235,36 +235,3 @@ async function initViewport(cameraEntity)
 
     console.debug('initViewport done for camera:', cameraEntity);
 }
-
-//----------------------------------------------------------------------------------------------
-async function setDefaultCameraSettings(camera, viewport)
-{
-    await SDK3DVerse.engineAPI.overrideComponent([camera], 'camera');
-    let cameraComponent = camera.getComponent("camera");
-    const defaultCameraComponent = SDK3DVerse.engineAPI.cameraAPI.getDefaultCameraValues();
-
-    cameraComponent = {
-        ...cameraComponent,
-        ...defaultCameraComponent
-    };
-    cameraComponent.dataJSON = {
-        ...cameraComponent.dataJSON,
-        ...defaultCameraComponent.dataJSON
-    };
-
-    if(AppConfig.cameraComponentDataJSON)
-    {
-        cameraComponent.dataJSON = {
-            ...cameraComponent.dataJSON,
-            ...AppConfig.cameraComponentDataJSON
-        };
-    }
-
-    camera.setComponent('camera', cameraComponent);
-    SDK3DVerse.engineAPI.propagateChanges();
-
-    viewport.defaultCameraValues = cameraComponent;
-
-    console.debug('defaultCameraComponent', cameraComponent);
-}
-
