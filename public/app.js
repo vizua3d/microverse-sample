@@ -1,4 +1,5 @@
 //--------------------------------------------------------------------------------------------------
+const teleporterConfig = AppConfig.teleporter || {};
 window.addEventListener('load', InitApp);
 
 //--------------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ async function InitApp()
         window.sampleApp = { videoPlayer };
         await videoPlayer.initialize();
     }
-    if(AppConfig.enableTeleporters)
+    if(teleporterConfig.enabled)
     {
         const teleportController = new TeleportController(characterController);
         await teleportController.initialize();

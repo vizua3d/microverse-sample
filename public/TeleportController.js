@@ -1,3 +1,7 @@
+//----------------------------------------------------------------------
+const config = AppConfig.teleporter || {};
+
+//----------------------------------------------------------------------
 class TeleportController
 {
     //----------------------------------------------------------------------
@@ -21,7 +25,7 @@ class TeleportController
     async initialize()
     {
         this.teleporters = await SDK3DVerse.engineAPI.filterEntities({ mandatoryComponents: ['box_geometry'], forbiddenComponents: ['physics_material'] });
-        this.teleporters = this.teleporters.filter(e => e.getName() === ("teleporter"));
+        this.teleporters = this.teleporters.filter(e => e.getName().startsWith(config.sourcePrefix));
 
         console.debug('teleporters:', this.teleporters)
         SDK3DVerse.notifier.on('OnCamerasUpdated', this.onCamerasUpdated);
@@ -58,7 +62,7 @@ class TeleportController
         }
 
         const children = await this.engineAPI.getEntityChildren(teleporterHit);
-        const destination = children.find(e => e.getName() === 'destination');
+        const destination = children.find(e => e.getName().startsWith(config.destinationPrefix));
 
         if(!destination)
         {
