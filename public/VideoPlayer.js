@@ -4,6 +4,8 @@ class VideoPlayer
     //----------------------------------------------------------------------
     constructor(playerEntity)
     {
+        this.config = AppConfig.videoScreen || {};
+
         this.playerEntity = playerEntity;
 
         this.sdk        = SDK3DVerse;
@@ -162,7 +164,7 @@ class VideoPlayer
 
         // 1px in css3dRenderer is 1 unit in the 3dverse space (i.e. 1 square in the debug lines)
         // Since 1 pixel for 1 unit would make a giant plane in the scene, we will scale it.
-        const pixelToUnitScale = 400; // 100 pixel = 1 unit
+        const pixelToUnitScale = this.config.pixelToUnitScale || 400; // 100 pixel = 1 unit
 
         const iframeURL = [ 'https://www.youtube.com/embed/', id, '?rel=0', '&autoplay=1' ].join('');
 

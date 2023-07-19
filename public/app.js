@@ -1,5 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 const teleporterConfig = AppConfig.teleporter || {};
+const videoScreenConfig = AppConfig.videoScreen || {};
 window.addEventListener('load', InitApp);
 
 //--------------------------------------------------------------------------------------------------
@@ -48,7 +49,8 @@ async function InitApp()
     await attachScripts(cameraEntity, characterController);
     await initViewport(cameraEntity);
 
-    if(AppConfig.enableVideoScreens)
+    // enableVideoScreens (backward compatibility)
+    if(AppConfig.enableVideoScreens || videoScreenConfig.enabled)
     {
         // Init the video player
         await SDK3DVerse.installExtension(SDK3DVerse_ThreeJS_Ext);
