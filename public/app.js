@@ -12,19 +12,8 @@ async function InitApp()
     SDK3DVerse.setViewports(null);
     SetResolution();
 
-    let debounceResizeTimeout = null;
-    window.addEventListener('resize', () =>
-    {
-        if(debounceResizeTimeout)
-        {
-            clearTimeout(debounceResizeTimeout);
-        }
-        debounceResizeTimeout = setTimeout(() =>
-        {
-            SetResolution(false);
-            debounceResizeTimeout = null;
-        }, 100);
-    });
+    window.addEventListener('resize', Resize);
+    window.addEventListener('keydown', setupKeyboardLayout);
 
     const sessionCreated = await Connect();
 
@@ -65,6 +54,37 @@ async function InitApp()
         await teleportController.initialize();
     }
 }
+
+//--------------------------------------------------------------------------------------------------
+let debounceResizeTimeout = null;
+function Resize()
+{
+    if(debounceResizeTimeout)
+    {
+        clearTimeout(debounceResizeTimeout);
+    }
+    debounceResizeTimeout = setTimeout(() =>
+    {
+        SetResolution(false);
+        debounceResizeTimeout = null;
+    }, 100);
+}
+
+//--------------------------------------------------------------------------------------------------
+async function setupKeyboardLayout(event)
+{
+    if((event.code === "KeyA" && event.key !== "a") ||
+       (event.code === "KeyQ" && event.key !== "q") ||
+       (event.code === "KeyZ" && event.key !== "z") ||
+       (event.code === "KeyW" && event.key !== "w"))
+    {
+        SDK3DVerse.actionMap.setFrenchKeyboardBindings();
+        window.removeEventListener('keydown', setupKeyboardLayout);
+        await SDK3DVerse.onConnected();
+        SDK3DVerse.actionMap.propagate();
+    }
+}
+
 
 //--------------------------------------------------------------------------------------------------
 // use setTimeout to delay a task that may be async (returning a promise) or not.
